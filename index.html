@@ -1,0 +1,60 @@
+<!DOCTYPE.html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Books that Surprise you!</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div id="startPage" class="row">
+            <h1 id="primeirotitulo">Books that Surprise you!</h1>
+            <br>
+            <div class="primeiro col-lg-4 col-lg-offset-4 col-md-4 col-md-offset-1">
+                <button id="inicial" class="btn btn-primary">Click here and Choose your book!</button>
+            </div>
+        </div>
+
+        <div id="mainPage">
+            <div class="row" id="bookContainer">
+                <img id="picture" src=""></img>
+                <h1 id="titulo"></h1>
+                <p id="paragrafo"></p>
+                <a id="website" href="" target="new">Buy</a>
+            </div>
+            <br>
+            <button id="buttonLike" data-Opinion="like" class="btn btn-primary"><span class="glyphicon glyphicon-thumbs-up"></span> Like</button>
+            <button id="buttonDislike" data-Opinion="dislike" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span> Dislike</button>
+        </div>
+    </div>
+
+    <div id="endPage" class="row">
+        <table id="tableBooks">
+            <thead>
+                <tr>
+                    <td>Book</td>
+                    <td>Likes</td>
+                    <td>Dislikes</td>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>
+        </table>
+
+        <br>
+
+        <label>Total de Likes: </label><label id="contador1"></label>
+        <br>
+        <label>Total de Dislikes: </label><label id="contador2"></label>
+
+    </div>
+    <script type="text/javascript" src="jquery-3.2.1.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+
+</body>
+
+</html>
