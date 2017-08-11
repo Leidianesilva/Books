@@ -1,9 +1,3 @@
-$('.primeiro').click(function () {
-    $("#startPage").hide();
-    $("#mainPage").show();
-    $("#primeiroTitulo").hide();
-});
-
 function Library() {     //Class Library
     //this is the constructor
     this.books = new Queue()
@@ -14,7 +8,7 @@ function Library() {     //Class Library
         this.books.enqueue(book)
     };
 
-        this.nextBook = function () {
+    this.nextBook = function () {
         this.actualBook = this.books.dequeue();
         if (this.actualBook === undefined)
             return false;
@@ -49,7 +43,6 @@ function Library() {     //Class Library
     //     } 
 };
 
-
 function Queue() {
     this.data = []
 
@@ -79,44 +72,52 @@ function Book(img, title, descricao, link) {
     };
 };
 
+function init(paramPesquisa){  
+    $.get("https://www.googleapis.com/books/v1/volumes?q=" + encodeURI(paramPesquisa)).done(function (data) {      //asyncrona json (server's reply) is inside the "data"
+    
+    //Method init will return immediately, this block is executed in parallel.     
+    console.log(data.items[0].volumeInfo.title, data.items[0].volumeInfo.Description);
 
-//***Executed at loading of webpage */
-$("#mainPage").hide();
-$("#endPage").hide();
+        for (var i = 0; i < data.items.length; i++) {
+            var item = data.items[i];
+            var book = new Book(item.volumeInfo.imageLinks.thumbnail,
+                item.volumeInfo.title,
+                item.volumeInfo.description, item.volumeInfo.previewLink);
+            library.addBook(book);
+            }
 
-var library = new Library();
+            $("#startPage").hide();
+            $("#mainPage").show();
+            library.nextBook(); 
+        }).fail(function (data) {
+            console.log("Error :" + data);
+        });
+
+};
+    
+
+$('#inicial').click(function(){
+    var paramPesquisa = $("#idsearch").val();     // "val"is used like it was html
+    init(paramPesquisa);
+})
+
+    //     this.counterDislikes = function () {
+    //         var nao = 0;
+    //         for (var i = 0; i < this.books.length; i++) {
+    //             nao += this.books[i].dislikes;
+    //         }
+
+    //         return nao;
 
 
-var book1 = new Book("http://vignette1.wikia.nocookie.net/davincicode/images/0/0f/Da_Vinci_Code_poster.jpg/revision/latest?cb=20150623194856", "Da Vinci Code", "A murder in Paris' Louvre Museum and cryptic clues in some of Leonardo da Vinci's most famous paintings lead to the discovery of a religious mystery. For 2,000 years a secret society closely guards information that -- should it come to light -- could rock the very foundations of Christianity.", "http://www.penguinrandomhouse.com/books/19309/the-da-vinci-code-by-dan-brown/");
-var book2 = new Book("https://images-na.ssl-images-amazon.com/images/M/MV5BN2EyZjM3NzUtNWUzMi00MTgxLWI0NTctMzY4M2VlOTdjZWRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_UX182_CR0,0,182,268_AL_.jpg", "Lord of Rings", "The Lord of the Rings is an epic high-fantasy novel written by English author and scholar J. R. R. Tolkien. The story began as a sequel to Tolkien's 1937 fantasy novel The Hobbit, but eventually developed into a much larger work.", "http://www.ebay.com/bhp/lord-of-the-rings-books");
-var book3 = new Book("http://crossref-it.info/files/images/dubliners-james-joyce.jpg", "Dubliners", "Dubliners is a collection of fifteen short stories by James Joyce, first published in 1914. They form a naturalistic depiction of Irish middle class life in and around Dublin in the early years of the 20th century.", "http://www.ebay.com/bhp/james-joyce-dubliners");
+// var book1 = new Book("http://vignette1.wikia.nocookie.net/davincicode/images/0/0f/Da_Vinci_Code_poster.jpg/revision/latest?cb=20150623194856", "Da Vinci Code", "A murder in Paris' Louvre Museum and cryptic clues in some of Leonardo da Vinci's most famous paintings lead to the discovery of a religious mystery. For 2,000 years a secret society closely guards information that -- should it come to light -- could rock the very foundations of Christianity.", "http://www.penguinrandomhouse.com/books/19309/the-da-vinci-code-by-dan-brown/");
+// var book2 = new Book("https://images-na.ssl-images-amazon.com/images/M/MV5BN2EyZjM3NzUtNWUzMi00MTgxLWI0NTctMzY4M2VlOTdjZWRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_UX182_CR0,0,182,268_AL_.jpg", "Lord of Rings", "The Lord of the Rings is an epic high-fantasy novel written by English author and scholar J. R. R. Tolkien. The story began as a sequel to Tolkien's 1937 fantasy novel The Hobbit, but eventually developed into a much larger work.", "http://www.ebay.com/bhp/lord-of-the-rings-books");
+// var book3 = new Book("http://crossref-it.info/files/images/dubliners-james-joyce.jpg", "Dubliners", "Dubliners is a collection of fifteen short stories by James Joyce, first published in 1914. They form a naturalistic depiction of Irish middle class life in and around Dublin in the early years of the 20th century.", "http://www.ebay.com/bhp/james-joyce-dubliners");
 
 
-library.addBook(book1);
-library.addBook(book2);
-library.addBook(book3);
-
-$('#inicial').click(function () {
-    library.nextBook();
-});
-
-$('#buttonLike').click(function () {
-    library.addLike();
-    if (library.nextBook() === false) {     //try to load next book, returns true if loaded successfully, returns false if no more books
-        $('#mainPage').hide();
-        $("#endPage").show();
-        ComputeAndDisplayStats();
-    }
-});
-
-$('#buttonDislike').click(function () {
-    library.addDislike();
-    if (library.nextBook() === false) {     //try to load next book, returns true if loaded successfully, returns false if no more books
-        $('#mainPage').hide();
-        $("#endPage").show();
-        ComputeAndDisplayStats();
-    }
-});
+// library.addBook(book1);
+// library.addBook(book2);
+// library.addBook(book3);
 
 
 function ComputeAndDisplayStats() {
@@ -148,8 +149,33 @@ function ComputeAndDisplayStats() {
     $("#contador2").text(totalDislikes);
 }
 
+// $('.primeiro').click(function () {
+//     $("#startPage").hide();
+//     $("#mainPage").show();
+//     $("#primeiroTitulo").hide();
+// });
 
 
+$('#buttonLike').click(function() {
+    library.addLike();
+    if (library.nextBook() === false) {     //try to load next book, returns true if loaded successfully, returns false if no more books
+        $('#mainPage').hide();
+        $("#endPage").show();
+        ComputeAndDisplayStats();
+    }
+});
 
+$('#buttonDislike').click(function(){
+    library.addDislike();
+    if (library.nextBook() === false){     //try to load next book, returns true if loaded successfully, returns false if no more books
+        $('#mainPage').hide();
+        $("#endPage").show();
+        ComputeAndDisplayStats();
+    }
+});
 
+//***Executed at loading of webpage */
+$("#mainPage").hide();
+$("#endPage").hide();
+var library = new Library();
 

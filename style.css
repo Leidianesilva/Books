@@ -63,3 +63,7 @@ table#books{
     align-content: center;
     margin: auto;
 }
+
+#tableHeader{
+    font-weight: bold;
+}
